@@ -108,6 +108,7 @@
         $('#comic').show();
 
         book.draw();
+        chrome.app.window.current().maximize();
 
         $(window).resize(function () {
           book.draw();
