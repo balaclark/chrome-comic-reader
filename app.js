@@ -100,6 +100,8 @@
           // start: localStorage.getItem(id + '_last_page')
         });
 
+        document.querySelector('html').className = 'reader';
+
         $(book).on('navigate', function (e) {
           console.log(e);
           // localStorage.setItem(id + '_last_page', page_number);
