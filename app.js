@@ -3,7 +3,7 @@
 
   'use strict';
 
-  var $droptarget = $('#droptarget');
+  var $droptarget = $('body');
   var $progressbar = $('.bar');
 
   function extractImages(file, opts) {
@@ -79,7 +79,6 @@
     extractImages(file, {
       start: function (file) {
         this.file = file;
-        $droptarget.hide();
         $('#open').hide();
         $('#filename').text(file.name);
         $('#progressbar').show();
@@ -100,8 +99,6 @@
           // start: localStorage.getItem(id + '_last_page')
         });
 
-        document.querySelector('html').className = 'reader';
-
         $(book).on('navigate', function (e) {
           console.log(e);
           // localStorage.setItem(id + '_last_page', page_number);
@@ -119,30 +116,31 @@
     });
   }
 
-  $droptarget.on('dragover', function (e) {
+  document.body.addEventListener('dragover', function (e) {
     e.stopPropagation();
     e.preventDefault();
-    $(this).addClass('active');
-  });
+    this.classList.add('dragover');
+  }, false);
 
-  $droptarget.on('dragleave', function (e) {
+  document.body.addEventListener('dragleave', function (e) {
     e.stopPropagation();
     e.preventDefault();
-    $(this).removeClass('active');
-  });
+    this.classList.remove('dragover');
+  }, false);
 
-  $droptarget.on('drop', function (e) {
+  document.body.addEventListener('drop', function (e) {
     e.stopPropagation();
     e.preventDefault();
-    openComicArchive(e.originalEvent.dataTransfer.files[0]);
-  });
+    this.classList.remove('dragover');
+    openComicArchive(e.dataTransfer.files[0]);
+  }, false);
 
-  $('#open').on('click', function (e) {
+  document.querySelector('#open').addEventListener('click', function (e) {
     chrome.fileSystem.chooseEntry({ type: 'openFile' }, function (entry) {
       entry.file(function (file) {
         openComicArchive(file);
       });
     });
-  });
+  }, false);
 
 })(jQuery);
