@@ -137,9 +137,11 @@
 
   document.querySelector('#open').addEventListener('click', function (e) {
     chrome.fileSystem.chooseEntry({ type: 'openFile' }, function (entry) {
-      entry.file(function (file) {
-        openComicArchive(file);
-      });
+      if (entry) {
+        entry.file(function (file) {
+          openComicArchive(file);
+        });
+      }
     });
   }, false);
 
