@@ -1,4 +1,6 @@
 
+var book;
+
 (function ($) {
 
   'use strict';
@@ -94,23 +96,51 @@
 
         var name = this.file.name.replace(/\.[a-z]+$/, '');
         var id = encodeURIComponent(name.toLowerCase());
+        var app_window = chrome.app.window.current();
+        var initial_bounds = app_window.getBounds();
 
-        var book = new ComicBook('comic', pages, {
+        book = new ComicBook('comic', pages, {
           // start: localStorage.getItem(id + '_last_page')
+          libPath: 'lib/comicbook/js/'
         });
 
         $(book).on('navigate', function (e) {
-          console.log(e);
+          // console.log(e);
           // localStorage.setItem(id + '_last_page', page_number);
         });
 
+        $('#progressbar').hide();
+        $('.bar').css('width', 0);
         $('#filepicker').hide();
-        $('#comic').show();
+        $('#comic-wrapper').show();
 
         book.draw();
-        chrome.app.window.current().maximize();
 
-        $(window).resize(function () {
+        // TODO: fit to page width instead of maximising
+        app_window.maximize();
+
+        $('.icon-remove-sign').on('click', function () {
+
+          book.destroy();
+          book = null;
+
+          $(window).off('resize');
+
+          $('#open').show();
+          $('#comic-wrapper').hide();
+          $('#filepicker').show();
+
+          // hackfix for page freezing bug, would prefer to use app_window.restore()
+          // https://code.google.com/p/chromium/issues/detail?id=236105
+          setTimeout(function () {
+            window.resizeTo(initial_bounds.width, initial_bounds.height);
+            app_window.moveTo(initial_bounds.left, initial_bounds.top);
+          }, 200);
+
+          return false;
+        });
+
+        $(window).on('resize', function () {
           book.draw();
         });
       }
@@ -136,7 +166,7 @@
     openComicArchive(e.dataTransfer.files[0]);
   }, false);
 
-  document.querySelector('#open').addEventListener('click', function (e) {
+  document.querySelector('#open button').addEventListener('click', function (e) {
     chrome.fileSystem.chooseEntry({ type: 'openFile' }, function (entry) {
       if (entry) {
         entry.file(function (file) {
