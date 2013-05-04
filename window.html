@@ -9,9 +9,7 @@
   <head>
     <meta charset="utf8">
     <title>Comic Reader</title>
-    <link rel="stylesheet" href="css/reset.css">
-    <link rel="stylesheet" href="css/Aristo/css/Aristo/Aristo.css">
-    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="lib/comicbook/comicbook.css">
     <style>
       html, body {
         height: 100%;
@@ -63,13 +61,14 @@
       </div>
     </div>
 
-    <canvas id="comic" style="display:none"></canvas>
+    <div id="comic-wrapper" style="display:none">
+      <canvas id="comic"></canvas>
+    </div>
 
     <script src="lib/jquery-2.0.0.min.js"></script>
-    <script src="lib/jquery-ui.js"></script>
     <script src="lib/bitjs/io.js"></script>
     <script src="lib/bitjs/archive.js"></script>
-    <script src="lib/ComicBook.min.js"></script>
+    <script src="lib/comicbook/js/comicbook.js"></script>
     <script src="app.js"></script>
 
   </body>
